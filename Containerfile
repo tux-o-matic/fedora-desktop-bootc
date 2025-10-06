@@ -5,9 +5,12 @@ RUN mkdir -p /var/roothome
 RUN echo "fedora" > /etc/hostname
 
 RUN dnf install -y @xfce-desktop-environment && \
-    dnf install -y lightdm xguest firefox libreoffice labwc wlroots && \
+    dnf install -y lightdm firefox libreoffice labwc wlroots flatpak && \
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && \
+    flatpak install -y --noninteractive flathub com.vscodium.codium && \
     systemctl enable lightdm --force && \
     systemctl set-default graphical.target && \
+    systemctl disable sshd && \
     dnf clean all
 
 RUN bootc container lint
