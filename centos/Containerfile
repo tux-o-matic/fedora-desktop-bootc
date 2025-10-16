@@ -1,0 +1,16 @@
+FROM quay.io/centos-bootc/centos-bootc:c10s
+
+RUN mkdir -p /var/roothome
+
+RUN echo "centos" > /etc/hostname
+
+RUN dnf group install -y "Server with GUI" && \
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && \
+    flatpak install -y --noninteractive flathub org.mozilla.firefox && \
+    flatpak install -y --noninteractive flathub org.libreoffice.LibreOffice && \
+    flatpak install -y --noninteractive flathub com.vscodium.codium && \
+    systemctl set-default graphical.target && \
+    systemctl disable sshd && \
+    dnf clean all
+
+RUN bootc container lint

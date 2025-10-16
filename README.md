@@ -2,24 +2,47 @@
 
 ## Building container
 
+### Fedora
 ```shell
+% cd fedora
 % podman build -f Containerfile -t fedora-bootc:42
+cd ..
+```
+
+### CentOS Stream
+```shell
+% cd centos
+% podman build -f Containerfile -t fedora-bootc:42
+cd ..
 ```
 
 ## Building qcow2 image
 
-You need to pull the bootc image builder prior to running the build
+You may want to pull the bootc image builder prior to running the build
 ```shell
 podman pull quay.io/centos-bootc/bootc-image-builder:latest
 ```
+
+### Fedora
 ```shell
-% sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v $(pwd)/output:/output -v /var/lib/containers/storage:/var/lib/containers/storage -v ./config.toml:/config.toml:ro quay.io/centos-bootc/bootc-image-builder:latest --type qcow2 --rootfs btrfs localhost/fedora-bootc:42
+% sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v $(pwd)/output/fedora:/output -v /var/lib/containers/storage:/var/lib/containers/storage -v ./fedora/config.toml:/config.toml:ro quay.io/centos-bootc/bootc-image-builder:latest --type qcow2 --rootfs btrfs localhost/fedora-bootc:42
 ```
 
-### Running it on arm64
-You need an EFI image to boot 
+### CentOS Stream
 ```shell
-% qemu-system-aarch64 -name fedora -m 8G -smp 4 -drive file=output/qcow2/disk.qcow2,if=virtio -drive file=flash0.img,format=raw,if=pflash -device virtio-gpu-pci -display default,show-cursor=on -device usb-kbd -device usb-mouse -usb -device qemu-xhci -cpu cortex-a57 -M virt,accel=hvf
+% sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v $(pwd)/output/centos:/output -v /var/lib/containers/storage:/var/lib/containers/storage -v ./centos/config.toml:/config.toml:ro quay.io/centos-bootc/bootc-image-builder:latest --type qcow2 localhost/centos-bootc:c10s
+```
+
+## Running it on arm64
+You need an EFI image to boot 
+### Fedora
+```shell
+% qemu-system-aarch64 -name fedora -m 8G -smp 4 -drive file=output/fedora/qcow2/disk.qcow2,if=virtio -drive file=flash0.img,format=raw,if=pflash -device virtio-gpu-pci -display default,show-cursor=on -device usb-kbd -device usb-mouse -usb -device qemu-xhci -cpu cortex-a57 -M virt,accel=hvf
+```
+
+### CerntOS Stream
+```shell
+% qemu-system-aarch64 -name centos -m 8G -smp 4 -drive file=output/centos/qcow2/disk.qcow2,if=virtio -drive file=flash0.img,format=raw,if=pflash -device virtio-gpu-pci -display default,show-cursor=on -device usb-kbd -device usb-mouse -usb -device qemu-xhci -cpu cortex-a57 -M virt,accel=hvf
 ```
 
 ## Graphical environment 
