@@ -12,7 +12,7 @@ cd ..
 ### CentOS Stream
 ```shell
 % cd centos
-% podman build -f Containerfile -t fedora-bootc:42
+% podman build -f Containerfile -t fedora-bootc:c10s
 cd ..
 ```
 
