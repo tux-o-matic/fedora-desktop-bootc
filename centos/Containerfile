@@ -1,5 +1,7 @@
 FROM quay.io/centos-bootc/centos-bootc:c10s
 
+RUN systemctl disable bootc-fetch-apply-updates.timer
+
 RUN mkdir -p /var/roothome
 
 RUN echo "centos" > /etc/hostname
