@@ -1,10 +1,9 @@
 FROM quay.io/centos-bootc/centos-bootc:c10s
 
-RUN systemctl disable bootc-fetch-apply-updates.timer
-
-RUN mkdir -p /var/roothome
-
-RUN echo "centos" > /etc/hostname
+RUN systemctl disable bootc-fetch-apply-updates.timer && \
+    systemctl disable sshd && \
+    mkdir -p -m 0700 /var/roothome && \
+    echo "centos" > /etc/hostname
 
 RUN dnf group install -y "Server with GUI" && \
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && \
@@ -13,7 +12,10 @@ RUN dnf group install -y "Server with GUI" && \
     flatpak install -y --noninteractive flathub org.libreoffice.LibreOffice && \
     flatpak install -y --noninteractive flathub com.vscodium.codium && \
     systemctl set-default graphical.target && \
-    systemctl disable sshd && \
-    dnf clean all
+    echo -e '[org/gnome/settings-daemon/plugins/housekeeping]\ndonation-reminder-enabled="false"' > /etc/dconf/db/local.d/01-housekeeping && \
+    dconf update && \
+    dnf clean all && \
+    rm -fr /var/log/*.log && \
+    rm -fr /var/log/rhsm/*.log
 
 RUN bootc container lint

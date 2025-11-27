@@ -1,10 +1,9 @@
-FROM quay.io/fedora/fedora-bootc:42
+FROM quay.io/fedora/fedora-bootc:43
 
-RUN systemctl disable bootc-fetch-apply-updates.timer
-
-RUN mkdir -p /var/roothome
-
-RUN echo "fedora" > /etc/hostname
+RUN systemctl disable bootc-fetch-apply-updates.timer && \
+    systemctl disable sshd && \
+    mkdir -p -m 0700 /var/roothome && \
+    echo "fedora" > /etc/hostname
 
 RUN dnf install -y @xfce-desktop-environment && \
     dnf install -y lightdm firefox libreoffice labwc wlroots flatpak gimp && \
@@ -12,7 +11,8 @@ RUN dnf install -y @xfce-desktop-environment && \
     flatpak install -y --noninteractive flathub com.vscodium.codium && \
     systemctl enable lightdm --force && \
     systemctl set-default graphical.target && \
-    systemctl disable sshd && \
-    dnf clean all
+    dnf clean all && \
+    rm -fr /var/log/*.log && \
+    rm -fr /var/log/*.log.*
 
 RUN bootc container lint

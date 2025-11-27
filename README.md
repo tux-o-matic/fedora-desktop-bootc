@@ -4,16 +4,12 @@
 
 ### Fedora
 ```shell
-% cd fedora
-% podman build -f Containerfile -t fedora-bootc:42
-cd ..
+% podman build -f fedora/Containerfile -t fedora-bootc:43
 ```
 
 ### CentOS Stream
 ```shell
-% cd centos
-% podman build -f Containerfile -t fedora-bootc:c10s
-cd ..
+% podman build -f centos/Containerfile -t centos-bootc:c10s
 ```
 
 ## Building qcow2 image
