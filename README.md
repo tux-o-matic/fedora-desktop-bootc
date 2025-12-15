@@ -57,7 +57,7 @@ Add the approriate driver for your target such as AMD, nouveau for Nvidia or i91
 
 ### guest login
 xguest is needed to create transient guest user accounts.
-In the Containerfilw, when using lightdm for Xfce, the following settings must be appliwed:
+In the Containerfile, when using lightdm for Xfce, the following settings must be appliwed:
 ```shell
 RUN sed -i 's/#allow-guest=true/allow-guest=true/g' /etc/lightdm/lightdm.conf && \
     sed -i 's/#autologin-guest=false/autologin-guest=true/g' /etc/lightdm/lightdm.conf
