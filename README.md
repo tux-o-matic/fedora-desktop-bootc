@@ -42,14 +42,15 @@ You need an EFI image to boot
 ```
 
 ## Plymouth boot splash screen
-When targetting physical machines with screen, you can add Plymouth and rebuilt the initramfs to include it.
-Install the packages `plymouth plymouth-theme-spinfinity`. Then:
+When targetting a physical machine with screen, you can add Plymouth to get a user-friendly boot splash scrren.
+To get that, you'll need to use dracut to rebuild the initramfs.
+First, install the packages `plymouth plymouth-theme-spinfinity` with dnf in your Containerfile. Then:
 ```shell
 RUN plymouth-set-default-theme spinfinity && \
     mkdir -p /usr/lib/bootc/kargs.d && \
     echo 'kargs = ["quiet", "splash", "rhgb"]' > /usr/lib/bootc/kargs.d/01-splash.toml && \
     kver=$(cd /lib/modules && ls -1 | sort -V | tail -n1) && \
-    env DRACUT_NO_XATTR=1 dracut -vf --gzip --no-early-microcode --no-hostonly --reproducible --add plymouth --add-driver "virtio_gpu simpledrm" /usr/lib/modules/$kver/initramfs.img "$kver"
+    env DRACUT_NO_XATTR=1 dracut -vf --gzip --no-hostonly --reproducible --add plymouth --add-driver "virtio_gpu simpledrm" /usr/lib/modules/$kver/initramfs.img "$kver"
 ```
 Add the approriate driver for your target such as AMD, nouveau for Nvidia or i915 for Intel.
 
