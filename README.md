@@ -58,6 +58,10 @@ RUN plymouth-set-default-theme spinfinity && \
 ```
 Add the approriate driver for your target such as AMD, nouveau for Nvidia or i915 for Intel.
 
+## Improving boot time
+The base image used is a server variant with systemd services enabled that might be of no use for a desktop system on baremetal. Services related to qemu for example are only useful for a virtual machine.
+By using `systemctl disable` in the Containerfile, you can prevent those services from starting at boot time.
+
 ## Graphical environment 
 
 ### guest login
