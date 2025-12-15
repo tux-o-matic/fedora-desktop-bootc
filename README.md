@@ -41,11 +41,23 @@ You need an EFI image to boot
 % qemu-system-aarch64 -name centos -m 8G -smp 4 -drive file=output/centos/qcow2/disk.qcow2,if=virtio -drive file=flash0.img,format=raw,if=pflash -device virtio-gpu-pci -display default,show-cursor=on -usb -device qemu-xhci -device usb-kbd -device usb-mouse -cpu cortex-a57 -M virt,accel=hvf
 ```
 
+## Plymouth boot splash screen
+When targetting physical machines with screen, you can add Plymouth and rebuilt the initramfs to include it.
+Install the packages `plymouth plymouth-theme-spinfinity`. Then:
+```shell
+RUN plymouth-set-default-theme spinfinity && \
+    mkdir -p /usr/lib/bootc/kargs.d && \
+    echo 'kargs = ["quiet", "splash", "rhgb"]' > /usr/lib/bootc/kargs.d/01-splash.toml && \
+    kver=$(cd /lib/modules && ls -1 | sort -V | tail -n1) && \
+    env DRACUT_NO_XATTR=1 dracut -vf --gzip --no-early-microcode --no-hostonly --reproducible --add plymouth --add-driver "virtio_gpu simpledrm" /usr/lib/modules/$kver/initramfs.img "$kver"
+```
+Add the approriate driver for your target such as AMD, nouveau for Nvidia or i915 for Intel.
+
 ## Graphical environment 
 
 ### guest login
 xguest is needed to create transient guest user accounts.
-In the Containerfil, when using lightdm for Xfce, the following settings must be appliwed:
+In the Containerfilw, when using lightdm for Xfce, the following settings must be appliwed:
 ```shell
 RUN sed -i 's/#allow-guest=true/allow-guest=true/g' /etc/lightdm/lightdm.conf && \
     sed -i 's/#autologin-guest=false/autologin-guest=true/g' /etc/lightdm/lightdm.conf

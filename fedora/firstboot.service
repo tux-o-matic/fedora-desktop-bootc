@@ -1,0 +1,13 @@
+[Unit]
+Description=Run script on first boot to install Flatpaks
+ConditionPathExists=!/var/lib/firstboot-done
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/flatpaks-install.sh
+ExecStartPost=/usr/bin/touch /var/lib/firstboot-done
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

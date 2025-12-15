@@ -5,14 +5,24 @@ RUN systemctl disable bootc-fetch-apply-updates.timer && \
     mkdir -p -m 0700 /var/roothome && \
     echo "fedora" > /etc/hostname
 
-RUN dnf install -y @xfce-desktop-environment && \
-    dnf install -y lightdm firefox libreoffice labwc wlroots flatpak gimp && \
+RUN dnf group install -y gnome-desktop && \
+    dnf install -y flatpak fedora-release-ostree-desktop && \
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && \
-    flatpak install -y --noninteractive flathub com.vscodium.codium && \
-    systemctl enable lightdm --force && \
     systemctl set-default graphical.target && \
     dnf clean all && \
+    rm -fr /var/cache/* && \
+    rm -fr /var/lib/dnf/repos/* && \
+    rm -fr /var/lib/flatpak/repo/tmp/cache/* && \
     rm -fr /var/log/*.log && \
     rm -fr /var/log/*.log.*
+
+COPY flatpaks-install.sh /usr/local/bin/flatpaks-install.sh
+COPY firstboot.service /etc/systemd/system/firstboot.service
+RUN chmod +x /usr/local/bin/flatpaks-install.sh && \
+    systemctl enable firstboot.service && \
+    systemctl --global mask packagekit.service && \
+    echo -e '[org/gnome/settings-daemon/plugins/housekeeping]\ndonation-reminder-enabled="false"' > /etc/dconf/db/local.d/01-housekeeping && \
+    echo -e '[org/gnome/software]\ndownload-updates="false"\nallow-uninstall="false"\nfirst-run="false"' > /etc/dconf/db/local.d/02-software && \
+    dconf update
 
 RUN bootc container lint
