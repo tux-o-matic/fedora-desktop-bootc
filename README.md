@@ -1,4 +1,4 @@
-## Fedora workstation image
+## Build a Linux Desktop with bootc
 
 ## Building container
 
@@ -29,8 +29,8 @@ podman pull quay.io/centos-bootc/bootc-image-builder:latest
 % sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v $(pwd)/output/centos:/output -v /var/lib/containers/storage:/var/lib/containers/storage -v ./centos/config.toml:/config.toml:ro quay.io/centos-bootc/bootc-image-builder:latest --type qcow2 localhost/centos-bootc:c10s
 ```
 
-## Running it on arm64
-You need an EFI image to boot 
+## Testing the VM (on arm64)
+You need an EFI image to boot, here named `flash0.img`.
 ### Fedora
 ```shell
 % qemu-system-aarch64 -name fedora -m 8G -smp 4 -drive file=output/fedora/qcow2/disk.qcow2,if=virtio -drive file=flash0.img,format=raw,if=pflash -device virtio-gpu-pci -display default,show-cursor=on -usb -device qemu-xhci -device usb-kbd -device usb-mouse -cpu cortex-a57 -M virt,accel=hvf
@@ -58,7 +58,7 @@ Add the approriate driver for your target such as AMD, nouveau for Nvidia or i91
 
 ### guest login
 xguest is needed to create transient guest user accounts.
-In the Containerfile, when using lightdm for Xfce, the following settings must be appliwed:
+In the Containerfile, when using lightdm for Xfce, the following settings must be applied:
 ```shell
 RUN sed -i 's/#allow-guest=true/allow-guest=true/g' /etc/lightdm/lightdm.conf && \
     sed -i 's/#autologin-guest=false/autologin-guest=true/g' /etc/lightdm/lightdm.conf
