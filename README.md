@@ -1,4 +1,8 @@
-## Build a Linux Desktop with bootc
+# Build a Linux Desktop with bootc
+
+## The architecture
+A Gnome based desktop Linux system using Flatpaks as a mean to provide applications for the user.
+Upon first boot, a list of popular desktop applications are downloaded in the background.
 
 ## Building container
 
@@ -16,7 +20,7 @@
 
 You may want to pull the bootc image builder prior to running the build
 ```shell
-podman pull quay.io/centos-bootc/bootc-image-builder:latest
+% podman pull quay.io/centos-bootc/bootc-image-builder:latest
 ```
 
 ### Fedora
