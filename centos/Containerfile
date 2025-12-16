@@ -6,6 +6,7 @@ RUN systemctl disable bootc-fetch-apply-updates.timer && \
     echo "centos" > /etc/hostname
 
 RUN dnf group install -y gnome-desktop && \
+    dnf remove -y gnome-initial-setup gnome-tour && \
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && \
     systemctl set-default graphical.target && \
     dnf clean all && \
