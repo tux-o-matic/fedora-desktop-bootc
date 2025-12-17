@@ -2,7 +2,7 @@
 
 ## The architecture
 A Gnome based desktop Linux system using Flatpaks as a mean to provide applications for the user.
-Upon first boot, a list of popular desktop applications are downloaded in the background.
+Upon first boot, a list of popular desktop applications are downloaded in the background. On subsequent boots, the system will check for available updates of those Flatpaks applications.
 
 ## Building container
 
@@ -40,7 +40,7 @@ You need an EFI image to boot, here named `flash0.img`.
 % qemu-system-aarch64 -name fedora -m 8G -smp 4 -drive file=output/fedora/qcow2/disk.qcow2,if=virtio -drive file=flash0.img,format=raw,if=pflash -device virtio-gpu-pci -display default,show-cursor=on -usb -device qemu-xhci -device usb-kbd -device usb-mouse -cpu cortex-a57 -M virt,accel=hvf
 ```
 
-### CerntOS Stream
+### CentOS Stream
 ```shell
 % qemu-system-aarch64 -name centos -m 8G -smp 4 -drive file=output/centos/qcow2/disk.qcow2,if=virtio -drive file=flash0.img,format=raw,if=pflash -device virtio-gpu-pci -display default,show-cursor=on -usb -device qemu-xhci -device usb-kbd -device usb-mouse -cpu cortex-a57 -M virt,accel=hvf
 ```
@@ -59,7 +59,7 @@ RUN plymouth-set-default-theme spinfinity && \
 Add the approriate driver for your target such as AMD, nouveau for Nvidia or i915 for Intel.
 
 ## Improving boot time
-The base image used is a server variant with systemd services enabled that might be of no use for a desktop system on baremetal. Services related to qemu for example are only useful for a virtual machine.
+The base image used is a server variant with systemd services enabled that might be of no use for a desktop system on baremetal. Some virtual machine hosting RPMs and services could be removed for desktop. Services related to qemu for example are only useful for a virtual machine.
 By using `systemctl disable` in the Containerfile, you can prevent those services from starting at boot time.
 
 ## Graphical environment 
