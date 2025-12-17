@@ -1,0 +1,12 @@
+[Unit]
+Description=Run script at boot to update Flatpaks
+ConditionPathExists=/var/lib/firstboot-done
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/flatpaks-update.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

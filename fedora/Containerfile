@@ -1,7 +1,16 @@
 FROM quay.io/fedora/fedora-bootc:43
 
+COPY flatpaks-install.sh /usr/local/bin/flatpaks-install.sh
+COPY flatpaks-update.sh /usr/local/bin/flatpaks-update.sh
+COPY firstboot.service /etc/systemd/system/firstboot.service
+COPY atboot.service /etc/systemd/system/atboot.service
+
 RUN systemctl disable bootc-fetch-apply-updates.timer && \
     systemctl disable sshd && \
+    chmod +x /usr/local/bin/flatpaks-update.sh && \
+    chmod +x /usr/local/bin/flatpaks-install.sh && \
+    systemctl enable firstboot.service && \
+    systemctl enable atboot.service && \
     mkdir -p -m 0700 /var/roothome && \
     echo "fedora" > /etc/hostname
 
@@ -17,11 +26,7 @@ RUN dnf group install -y gnome-desktop && \
     rm -fr /var/log/*.log && \
     rm -fr /var/log/*.log.*
 
-COPY flatpaks-install.sh /usr/local/bin/flatpaks-install.sh
-COPY firstboot.service /etc/systemd/system/firstboot.service
-RUN chmod +x /usr/local/bin/flatpaks-install.sh && \
-    systemctl enable firstboot.service && \
-    systemctl --global mask packagekit.service && \
+RUN systemctl --global mask packagekit.service && \
     echo -e '[org/gnome/settings-daemon/plugins/housekeeping]\ndonation-reminder-enabled="false"' > /etc/dconf/db/local.d/01-housekeeping && \
     echo -e '[org/gnome/software]\ndownload-updates="false"\nallow-uninstall="false"\nfirst-run="false"' > /etc/dconf/db/local.d/02-software && \
     dconf update
