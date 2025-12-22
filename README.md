@@ -2,7 +2,9 @@
 
 ## The architecture
 A Gnome based desktop Linux system using Flatpaks as a mean to provide applications for the user.
-Upon first boot, a list of popular desktop applications are downloaded in the background. On subsequent boots, the system will check for available updates of those Flatpaks applications.
+
+Upon first boot, a list of popular desktop applications are downloaded in the background. This implies that an wired connection is active or that WiFi network configuration as been preloaded with the image.
+On subsequent boots, the system will check for available updates of those Flatpaks applications.
 
 ## Building container
 
