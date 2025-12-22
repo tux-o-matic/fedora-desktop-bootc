@@ -62,7 +62,7 @@ Add the approriate driver for your target such as AMD, nouveau for Nvidia or i91
 ## Improving image size and boot time
 The base image used is a server variant with systemd services enabled or VM guest agents that are of no use for a desktop system. 
 
-The shipped Gnome Boxes application and its meany depedencies for managing virtual machines could be removed for a regular desktop usage.
+The shipped Gnome Boxes application and its many dependencies for managing virtual machines can be removed for a regular desktop usage.
 
 If you delete some packages present in the base image, remember to build with `-squash-all`.
 By using `systemctl disable` in the Containerfile, you can prevent those services from starting at boot time.
