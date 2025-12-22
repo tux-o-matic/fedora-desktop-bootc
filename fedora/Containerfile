@@ -15,8 +15,8 @@ RUN systemctl disable bootc-fetch-apply-updates.timer && \
     echo "fedora" > /etc/hostname
 
 RUN dnf group install -y gnome-desktop && \
-    dnf install -y fedora-release-ostree-desktop && \
-    dnf remove -y gnome-initial-setup gnome-tour && \
+    dnf install -y fedora-release-ostree-desktop gnome-shell-extension-dash-to-dock wget && \
+    dnf remove -y gnome-initial-setup gnome-tour decibels showtime simple-scan snapshot && \
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && \
     systemctl set-default graphical.target && \
     dnf clean all && \
@@ -29,6 +29,7 @@ RUN dnf group install -y gnome-desktop && \
 RUN systemctl --global mask packagekit.service && \
     echo -e '[org/gnome/settings-daemon/plugins/housekeeping]\ndonation-reminder-enabled="false"' > /etc/dconf/db/local.d/01-housekeeping && \
     echo -e '[org/gnome/software]\ndownload-updates="false"\nallow-uninstall="false"\nfirst-run="false"' > /etc/dconf/db/local.d/02-software && \
+    echo -e '[org/gnome/shell]\nenabled-extensions=["dash-to-dock@micxgx.gmail.com"]' > /etc/dconf/db/local.d/03-shell && \
     dconf update
 
 RUN bootc container lint
