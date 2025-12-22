@@ -3,7 +3,7 @@
 ## The architecture
 A Gnome based desktop Linux system using Flatpaks as a mean to provide applications for the user.
 
-Upon first boot, a list of popular desktop applications are downloaded in the background. This implies that an wired connection is active or that WiFi network configuration as been preloaded with the image.
+Upon first boot, a list of popular desktop applications are downloaded in the background. This implies that a wired connection is active or that a WiFi network configuration as been preloaded with the image.
 On subsequent boots, the system will check for available updates of those Flatpaks applications.
 
 ## Building container
@@ -62,19 +62,8 @@ RUN plymouth-set-default-theme spinfinity && \
 Add the approriate driver for your target such as AMD, nouveau for Nvidia or i915 for Intel.
 
 ## Improving image size and boot time
-The base image used is a server variant with systemd services enabled or VM guest agents that are of no use for a desktop system. 
+The base image used is a server variant with systemd services enabled which might be of no use for a desktop system. By using `systemctl disable` in the Containerfile, you can prevent those services from starting at boot time. 
 
 The shipped Gnome Boxes application and its many dependencies for managing virtual machines can be removed for a regular desktop usage.
 
 If you delete some packages present in the base image, remember to build with `-squash-all`.
-By using `systemctl disable` in the Containerfile, you can prevent those services from starting at boot time.
-
-## Graphical environment 
-
-### guest login
-xguest is needed to create transient guest user accounts.
-In the Containerfile, when using lightdm for Xfce, the following settings must be applied:
-```shell
-RUN sed -i 's/#allow-guest=true/allow-guest=true/g' /etc/lightdm/lightdm.conf && \
-    sed -i 's/#autologin-guest=false/autologin-guest=true/g' /etc/lightdm/lightdm.conf
-```
