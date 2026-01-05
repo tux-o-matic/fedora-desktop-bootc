@@ -67,3 +67,11 @@ The base image used is a server variant with systemd services enabled which migh
 The shipped Gnome Boxes application and its many dependencies for managing virtual machines can be removed for a regular desktop usage.
 
 If you delete some packages present in the base image, remember to build with `-squash-all`.
+
+# Kickstart
+If you want to keep the generated image completely immutable and free of user configuration or simply to deployment with more complex setup, good old Kickstart is the solution.
+Key aspects of using Kickstart with bootc:
+- You need at least 3 partitions, `/boot`, `/boot/efi` and `/` where your image will be applied.
+- You can use `ignoredisk --only-use=nvme0n1` if you want to target the first NVMe drive and ignore any other storage (Thanks [Ben Breard](https://mrguitar.net/?p=2579)).
+- Fedora, unlike CentOS or RHEL, supports btrfs and it has been the default for Desktop deployments for many years.
+- You can boot an installer with your Kickstart file pointing to your image via `ostreecontainer --url <IMAGE_URL>`.
